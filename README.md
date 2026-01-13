@@ -23,7 +23,7 @@
 ### 使用 uv（推荐）
 
 ```bash
-git clone https://www.modelscope.cn/your_username/time-mcp.git
+git clone https://github.com/xbsheng/time-mcp.git
 cd time-mcp
 uv sync
 ```
@@ -36,11 +36,15 @@ pip install fastmcp python-dateutil pytz
 
 ## 使用方法
 
-### 作为 MCP 服务运行
+### 启动 MCP 服务
+
+服务默认使用 HTTP 方式运行在 8000 端口：
 
 ```bash
-uv run python -m time_mcp.server
+uv run python src/server.py
 ```
+
+启动后，MCP 服务将在 `http://localhost:8000` 上监听。
 
 ### 在 Cursor 中配置
 
@@ -50,8 +54,20 @@ uv run python -m time_mcp.server
 {
   "mcpServers": {
     "time-mcp": {
+      "url": "http://localhost:8000/mcp"
+    }
+  }
+}
+```
+
+或者使用命令行方式（无需单独启动服务）：
+
+```json
+{
+  "mcpServers": {
+    "time-mcp": {
       "command": "uv",
-      "args": ["--directory", "/path/to/time-mcp", "run", "python", "-m", "time_mcp.server"]
+      "args": ["--directory", "/path/to/time-mcp", "run", "python", "src/server.py"]
     }
   }
 }
@@ -66,7 +82,7 @@ uv run python -m time_mcp.server
   "mcpServers": {
     "time-mcp": {
       "command": "uv",
-      "args": ["--directory", "/path/to/time-mcp", "run", "python", "-m", "time_mcp.server"]
+      "args": ["--directory", "/path/to/time-mcp", "run", "python", "src/server.py"]
     }
   }
 }
@@ -160,10 +176,23 @@ timezone_convert(time="2026-01-12 12:00:00", to_tz="America/New_York")
 | -------- | ------ | ------ | -------------------------------------- |
 | `region` | string | -      | 按区域筛选（如 Asia, America, Europe） |
 
+## 项目结构
+
+```
+time-mcp/
+├── src/
+│   ├── __init__.py
+│   └── server.py      # MCP 服务主文件
+├── pyproject.toml     # 项目配置
+├── uv.lock            # 依赖锁定
+├── LICENSE
+└── README.md
+```
+
 ## 技术栈
 
 - Python 3.11+
-- [FastMCP](https://github.com/jlowin/fastmcp) - MCP 服务框架
+- [FastMCP](https://github.com/jlowin/fastmcp) >= 2.0.0 - MCP 服务框架
 - [python-dateutil](https://github.com/dateutil/dateutil) - 时间解析
 - [pytz](https://pythonhosted.org/pytz/) - 时区支持
 

@@ -262,4 +262,7 @@ def list_timezones(region: Optional[str] = None) -> dict:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(
+        transport="streamable-http",
+        port=8000,
+    )
